@@ -5,15 +5,15 @@ let cache = null;
 let lastFetch = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
-const API_KEY = 'SUA_CHAVE_TWELVE_DATA';
+const API_KEY = process.env.TWELVE_DATA_KEY;
 const BASE_URL = 'https://api.twelvedata.com/price';
 
 const symbols = {
   sp500: 'SPX',
   nasdaq: 'NDX',
   dowjones: 'DJI',
-  msci: 'MSCIW', // Verificar se está disponível
-  russell: 'RUT',
+  msci: 'MSCIW', // Verifique se esse índice está disponível
+  russell: 'RUT'
 };
 
 module.exports = async (req, res) => {
@@ -27,9 +27,10 @@ module.exports = async (req, res) => {
     for (const [key, symbol] of Object.entries(symbols)) {
       const response = await fetch(`${BASE_URL}?symbol=${symbol}&apikey=${API_KEY}`);
       const data = await response.json();
+
       results[key] = {
         name: key.toUpperCase(),
-        price: data.price ? parseFloat(data.price).toFixed(2) : null,
+        price: data.price ? parseFloat(data.price).toFixed(2) : null
       };
     }
 
